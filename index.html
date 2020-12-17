@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Validation in JS</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h2>Registration Form</h2>
+      </div>
+      <form action="#" id="form" class="form">
+        <div class="form-control">
+          <label>Username</label>
+          <input
+            type="text"
+            name=""
+            id="username"
+            placeholder="Enter Your Name"
+            autocomplete="off"
+          />
+          <i class="fa fa-check-circle" aria-hidden="true"></i>
+          <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+          <small>Error Message</small>
+        </div>
+        <div class="form-control">
+          <label>Email</label>
+          <input
+            type="email"
+            name=""
+            id="email"
+            placeholder="Enter Your Email"
+            autocomplete="off"
+          />
+          <i class="fa fa-check-circle" aria-hidden="true"></i>
+          <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+          <small>Error Message</small>
+        </div>
+        <div class="form-control">
+          <label>Contact Number</label>
+          <input
+            type="number"
+            name=""
+            id="phone"
+            placeholder="Enter Your Contact Number"
+            autocomplete="off"
+          />
+          <i class="fa fa-check-circle" aria-hidden="true"></i>
+          <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+          <small>Error Message</small>
+        </div>
+        <div class="form-control">
+          <label>Password</label>
+          <input
+            type="password"
+            name=""
+            id="password1"
+            placeholder="Enter Your Password"
+            autocomplete="off"
+          />
+          <i class="fa fa-check-circle" aria-hidden="true"></i>
+          <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+          <small>Error Message</small>
+        </div>
+        <div class="form-control">
+          <label>Confirm Password</label>
+          <input
+            type="password"
+            name=""
+            id="password2"
+            placeholder="Enter Your Password Again"
+            autocomplete="off"
+          />
+          <i class="fa fa-check-circle" aria-hidden="true"></i>
+          <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+          <small>Error Message</small>
+        </div>
+        <input type="submit" name="" class="btn" value="Submit" />
+      </form>
+    </div>
+
+    <script type="text/javascript">
+      // get data
+      const form = document.getElementById("form");
+      const username = document.getElementById("username");
+      const email = document.getElementById("email");
+      const phone = document.getElementById("phone");
+      const password1 = document.getElementById("password1");
+      const password2 = document.getElementById("password2");
+
+      // add event
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        validate();
+      });
+
+      // NOTE :
+      // when u call function before declaring it then it should be declared first at the top as fat arrow function
+      // else u can use simple function keyword to make function
+
+      // if u want to use fat arrow function then it has to be declared up otherwise it will throw an error e.g const fun_name = () => {}
+      // but it that function is simple function then it will work e.g function fun_name(){}
+      const sendData = (sRate, count, usernameVal) => {
+        if (sRate === count) {
+          // alert(usernameVal," Successfully registered");
+          swal("Welcome " +usernameVal,"Registration Successful","success")
+          location.href = `demo.html?username=${usernameVal}`;
+        }
+      };
+
+      const successMsg = (usernameVal) => {
+        let formControl = document.getElementsByClassName("form-control");
+        var count = formControl.length - 1;
+        for (let i = 0; i < formControl.length; i++) {
+          if (formControl[i].className === "form-control success") {
+            var sRate = 0 + i;
+            sendData(sRate, count, usernameVal);
+          } else {
+            return false;
+          }
+        }
+      };
+
+      const setErrorMsg = (input, errorMsg) => {
+        const formControl = input.parentElement;
+        const small = formControl.querySelector("small");
+        formControl.className = "form-control error";
+        small.innerText = errorMsg;
+      };
+
+      const setSuccessMsg = (input) => {
+        const formControl = input.parentElement;
+        formControl.className = "form-control success";
+      };
+
+      const isEmail = (emailVal) => {
+        var atSymbol = emailVal.indexOf("@");
+        var dot = emailVal.lastIndexOf(".");
+        if (atSymbol < 1) return false;
+        else if (dot <= atSymbol + 2) return false;
+        else if (dot === emailVal.length - 1) return false;
+        else return true;
+      };
+
+      //   validate function
+      const validate = () => {
+        // getting values without blank spaces
+        const usernameVal = username.value.trim();
+        const emailVal = email.value.trim();
+        const phoneVal = phone.value.trim();
+        const pass1 = password1.value.trim();
+        const pass2 = password2.value.trim();
+
+        // validate username
+        if (usernameVal === "") {
+          setErrorMsg(username, "Username cannot be blank");
+        } else if (usernameVal.length <= 2) {
+          setErrorMsg(username, "Username should have more than two letters");
+        } else {
+          setSuccessMsg(username);
+        }
+
+        // validate email
+        if (emailVal === "") {
+          setErrorMsg(email, "Email cannot be blank");
+        } else if (!isEmail(emailVal)) {
+          setErrorMsg(email, "Not Valid Email");
+        } else {
+          setSuccessMsg(email);
+        }
+
+        // validate phone number
+        if (phoneVal === "") {
+          setErrorMsg(phone, "Contact Number cannot be blank");
+        } else if (phoneVal.length != 10) {
+          setErrorMsg(phone, "Contact Number should have 10 numbers");
+        } else {
+          setSuccessMsg(phone);
+        }
+
+        // validate password1
+        if (pass1 === "") {
+          setErrorMsg(password1, "Password cannot be blank");
+        } else if (pass1.length < 6) {
+          setErrorMsg(password1, "Password should have more than 6 letters");
+        } else {
+          setSuccessMsg(password1);
+        }
+
+        // // validate password2
+
+        if (pass2 === "") {
+          setErrorMsg(password2, "Password cannot be blank");
+        } else if (pass2 !== pass1) {
+          setErrorMsg(password2, "Passwords should be same");
+        } else if (pass2.length < 2) {
+          setErrorMsg(password2, "Password should have more than two letters");
+        } else {
+          setSuccessMsg(password2);
+        }
+
+        successMsg(usernameVal);
+      };
+    </script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+  </body>
+</html>
